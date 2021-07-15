@@ -1,35 +1,33 @@
 import { CONSTANTS } from "../actions";
 let listid=2
-let cardid=4
+let cardid=6
 const initialState=[
     {
-        title: "on-Hold",
-        id: 0,
+        title: "Hold",
+        id: `list-${0}`,
         cards:[
             {
-                id:0,
-                text:'first card created'
+                id:`card-${0}`,
+                text:'Example Card'
             },
-            {
-                id:1,
-                text:'second card created',
-            }
+           
         ]
     },
     {
-        title: "working",
-        id: 1,
+        title: "Working",
+        id: `list-${1}`,
         cards:[
-            {
-                id:0,
-                text:'first card created'
-            },
-            {
-                id:1,
-                text:'second card created',
-            }
+           
         ]
-    }
+    },
+    {
+        title: "Completed",
+        id: `list-${2}`,
+        cards:[
+           
+           
+        ]
+    },
 ]
 const listsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -37,15 +35,15 @@ const listsReducer = (state = initialState, action) => {
           const newList={
               title: action.payload,
               cards:[],
-              id: listid,
+              id: `list-${listid}`,
 
           }
           listid+=1
           return [...state,newList];
         case CONSTANTS.ADD_CARD:
-           const newcard={
+           {const newcard={
                text:action.payload.text,
-               id:cardid,
+               id:`card-${cardid}`,
            };
            cardid+=1;
         const newstate=state.map(list=>{
@@ -60,6 +58,51 @@ const listsReducer = (state = initialState, action) => {
             }
         });
         return newstate;
+      
+    }
+
+      case CONSTANTS.DRAG_HAPPENED:
+      const {
+        droppableIdStart,
+        droppableIdEnd,
+        droppableIndexEnd,
+        droppableIndexStart,
+        draggableId,
+        type
+        
+      } = action.payload;
+      const newState=[...initialState];
+
+      if (type==='list'){
+          const list= newState.splice(droppableIndexStart,1);
+          newState.splice(droppableIndexEnd,0,...list);
+          return newState;
+
+      }
+      // in the same list
+      const newstate=[...state]
+      if (droppableIdStart === droppableIdEnd) {
+        const list = state.find(list=>droppableIdStart===list.id);
+        const card = list.cards.splice(droppableIndexStart, 1);
+        list.cards.splice(droppableIndexEnd, 0, ...card);
+        
+      }
+
+      if (droppableIdStart !== droppableIdEnd) {
+        // find the list where the drag happened
+        const listStart = state.find(list=>droppableIdStart===list.id);
+        // pull out the card from this list
+        const card = listStart.cards.splice(droppableIndexStart, 1);
+        // find the list where the drag ended
+        const listEnd = state.find(list=>droppableIdEnd===list.id);
+
+        // put the card in the new list
+        listEnd.cards.splice(droppableIndexEnd, 0, ...card);
+        
+      }
+      return newstate;
+
+
       default: return state;
       }
     };

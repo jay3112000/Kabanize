@@ -67,11 +67,9 @@ class AddButton extends React.Component{
     renderAddButton=()=>{
         const { list }=this.props;
         const buttonText = list ? "Add another list" : "Add another card";
-        const buttonTextOpacity = list ? 1 : 0.5;
-        const buttonTextColor = list ? "white" : "inherit";
-        const buttonTextBackground = list ? "rgba(0,0,0,.15)" : "inherit";
+        
         return(
-            <div className='button_style' onClick={this.openForm}>
+            <div className={list?'button_style_list':'button_style'} onClick={this.openForm}>
                 <AddIcon/>
                 <p>{buttonText}</p>
                 
@@ -112,7 +110,9 @@ class AddButton extends React.Component{
                 >
                  ADD
                </button>
-                 <Close/>
+                 <Close
+                 onClick={this.closeForm}
+                 />
                 </div>
             
                   

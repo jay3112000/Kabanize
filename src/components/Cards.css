@@ -1,5 +1,18 @@
 .container{
-    background-color: white;
+   
+    background-color: rgba(55, 17, 105, 0.20) ;
     margin-bottom: 9px;
     padding: 6px;
+}
+.delete{
+   
+   position: relative;
+   bottom: 75px;
+   left: 250px;
+}
+.delete:hover{
+    opacity: 0.5;
+    cursor: pointer;
+    color: red;
+    font-size: x-large;
 }
